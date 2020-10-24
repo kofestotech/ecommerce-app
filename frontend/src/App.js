@@ -12,7 +12,6 @@ const App = () => {
   useEffect(() => {
     // getting logged in user from firebase and then storing in user reducer
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      console.log(user);
       if (user) {
         // JWT token assigned to logged in user
         const idTokenResult = await user.getIdTokenResult();
