@@ -12,7 +12,7 @@ const Register = ({ history }) => {
     if (user && user.token) {
       history.push("/");
     }
-  }, [user]);
+  }, [user, history]);
 
   const saveEmailLocalStorage = () => {
     window.localStorage.setItem("emailForRegistration", email);

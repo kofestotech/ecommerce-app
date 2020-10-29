@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import Toast from "../component/common/Toast";
 import styled from "styled-components";
 
-const UserPrivateRoutes = ({ children, ...rest }) => {
-  const { user } = useSelector((state) => ({ ...state }));
+const UserRoutes = ({ children, ...rest }) => {
+  let { user } = useSelector((state) => ({ ...state }));
   return user && user.token ? (
     <Route {...rest} render={() => children} />
   ) : (
@@ -21,4 +21,4 @@ const StyledText = styled.span`
   font-weight: 600;
 `;
 
-export default UserPrivateRoutes;
+export default UserRoutes;

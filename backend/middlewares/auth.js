@@ -1,4 +1,7 @@
 const admin = require("../firebase");
+const User = require("../model/user");
+
+const ADMIN_USER = "admin";
 
 exports.authCheck = async (req, res, next) => {
   // checking whether the token we are getting from frontend is a valid token from firebase using firebase admin
@@ -11,7 +14,21 @@ exports.authCheck = async (req, res, next) => {
     next();
   } catch (err) {
     res.status(401).json({
-      error: "Invalid or expired Token",
+      error: "error",
+      message: "Invalid or expired Token",
     });
+  }
+};
+
+exports.adminCheck = async (req, res, next) => {
+  const { email } = req.user;
+  const adminUser = await User.findOne({ email }).exec();
+  if (adminUser.role !== ADMIN_USER) {
+    res.status(403).json({
+      error: "error",
+      message: "Admin resource. Access denied",
+    });
+  } else {
+    next();
   }
 };

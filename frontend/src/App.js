@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Routes from "./routes/Routes";
 import Header from "./component/nav/Header";
 import { ToastContainer } from "react-toastify";
@@ -9,7 +9,7 @@ import { getLoggedInUser } from "./pages/auth/actions";
 
 const App = () => {
   const dispatch = useDispatch();
-
+  const [isResponseAvailable, setIsResponseAvailable] = useState(false);
   useEffect(() => {
     // getting logged in user from firebase and then storing in user reducer
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -28,6 +28,8 @@ const App = () => {
                 _id: response.data._id,
               },
             });
+            setIsResponseAvailable(true);
+            window.localStorage.setItem("loggedInUser", JSON.stringify(user));
           })
           .catch((err) => console.log(err));
       }
@@ -38,9 +40,13 @@ const App = () => {
 
   return (
     <div className="App">
-      <Header />
-      <ToastContainer />
-      <Routes />
+      {isResponseAvailable && (
+        <>
+          <Header />
+          <ToastContainer />
+          <Routes />
+        </>
+      )}
     </div>
   );
 };

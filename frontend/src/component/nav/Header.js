@@ -4,7 +4,6 @@ import {
   HomeFilled,
   SettingOutlined,
   UserAddOutlined,
-  UserOutlined,
   LoginOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
