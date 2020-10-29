@@ -2,11 +2,15 @@ import React, { useState, useEffect } from "react";
 import { auth } from "../../Firebase";
 import Toast from "../../component/common/Toast";
 import Home from "../Home";
+import { useDispatch, useSelector } from "react-redux";
+import { createOrUpdateUser } from "./actions";
 
 const RegisterComplete = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { history } = props;
+  const { user } = useSelector((state) => ({ ...state }));
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const emailForRegistration = window.localStorage.getItem(
@@ -40,7 +44,21 @@ const RegisterComplete = (props) => {
         const idTokenResult = user.getIdTokenResult();
 
         // store user details in redux store
-
+        createOrUpdateUser({ authtoken: idTokenResult.token })
+          .then((response) => {
+            const { user } = response.data;
+            dispatch({
+              type: "LOGGED_IN_USER",
+              payload: {
+                name: user.name,
+                email: user.email,
+                token: idTokenResult.token,
+                role: user.role,
+                _id: user._id,
+              },
+            });
+          })
+          .catch((err) => console.log(err));
         history.push("/");
       }
     } catch (error) {

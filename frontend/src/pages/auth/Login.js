@@ -4,14 +4,14 @@ import styled from "styled-components";
 import { GoogleOutlined, MailOutlined } from "@ant-design/icons";
 import { auth, googleAuthProvider } from "../../Firebase";
 import Toast from "../../component/common/Toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { createOrUpdateUser } from "./actions";
 
 const Login = (props) => {
   // for testing added static username and password
-  const [email, setEmail] = useState("sachinst000@gmail.com");
-  const [password, setPassword] = useState("sachin1004");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { user } = useSelector((state) => ({ ...state }));
   const dispatch = useDispatch();
@@ -25,6 +25,14 @@ const Login = (props) => {
 
   // to send link after registeration to user mail.
 
+  const roleBasedRedirect = (role) => {
+    if (role === "admin") {
+      history.push("/admin/dashboard");
+    } else {
+      history.push("/user/dashboard");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -32,15 +40,25 @@ const Login = (props) => {
       const response = await auth.signInWithEmailAndPassword(email, password);
       const { user } = response;
       const idTokenResult = await user.getIdTokenResult();
-      dispatch({
-        type: "LOGGED_IN_USER",
-        payload: {
-          email: user.email,
-          token: idTokenResult.token,
-        },
-      });
-      Toast("success", "Login successfull. Welcome to Shopify.");
-      history.push("/");
+
+      // creating or updating user in our mongodb. before this we have user in firebase
+      createOrUpdateUser({ authtoken: idTokenResult.token })
+        .then((response) => {
+          const { user } = response.data;
+          dispatch({
+            type: "LOGGED_IN_USER",
+            payload: {
+              name: user.name,
+              email: user.email,
+              token: idTokenResult.token,
+              role: user.role,
+              _id: user._id,
+            },
+          });
+          Toast("success", "Login successfull. Welcome to Shopify.");
+          roleBasedRedirect(user.role);
+        })
+        .catch((err) => console.log(err));
     } catch (err) {
       Toast("error", err.message);
     }
@@ -53,14 +71,23 @@ const Login = (props) => {
       .then(async (response) => {
         const { user } = response;
         const idTokenResult = await user.getIdTokenResult();
-        dispatch({
-          type: "LOGGED_IN_USER",
-          payload: {
-            email: user.email,
-            token: idTokenResult.token,
-          },
-        });
-        history.push("/");
+        createOrUpdateUser({ authtoken: idTokenResult.token })
+          .then((response) => {
+            const { user } = response.data;
+            dispatch({
+              type: "LOGGED_IN_USER",
+              payload: {
+                name: user.name,
+                email: user.email,
+                token: idTokenResult.token,
+                role: user.role,
+                _id: user._id,
+              },
+            });
+            Toast("success", "Login successfull. Welcome to Shopify.");
+            roleBasedRedirect(user.role);
+          })
+          .catch((err) => console.log(err));
       })
       .catch((err) => Toast("error", err.message));
   };

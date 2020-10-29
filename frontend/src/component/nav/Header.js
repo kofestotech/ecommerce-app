@@ -21,7 +21,6 @@ const Header = (props) => {
   const dispatch = useDispatch();
   //getting redux state
   let { user } = useSelector((state) => ({ ...state }));
-
   const [current, setCurrent] = useState("");
   const history = useHistory();
   // to select the item on the nav bar
