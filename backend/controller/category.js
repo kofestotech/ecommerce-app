@@ -10,14 +10,14 @@ exports.createCategory = async (req, res) => {
       slug: slugify(name).toLowerCase(),
     });
     res.status(201).json({
-      status: "success",
+      success: true,
       data: {
         category: newCategory,
       },
     });
   } catch (error) {
     res.status(400).json({
-      status: "fail",
+      success: false,
       message: "Unable to create new category.",
     });
   }
@@ -27,14 +27,14 @@ exports.getAllCategories = async (req, res) => {
   try {
     const categories = await Category.find().sort({ createdAt: -1 }).exec();
     res.status(200).json({
-      status: "success",
+      success: true,
       data: {
         categories,
       },
     });
   } catch (error) {
     res.status(400).json({
-      status: "fail",
+      success: false,
       message: "Unable to get categories",
     });
   }
@@ -45,19 +45,19 @@ exports.getCategory = async (req, res) => {
     const category = await Category.findOne({ slug: req.params.slug });
     if (!category) {
       res.status(400).json({
-        status: "fail",
+        success: false,
         message: `No category found with name ${req.params.slug}`,
       });
     }
     res.status(200).json({
-      status: "success",
+      success: true,
       data: {
         category,
       },
     });
   } catch (error) {
     res.status(400).json({
-      status: "fail",
+      success: false,
       message: "Please try again",
     });
   }
@@ -70,17 +70,17 @@ exports.deleteCategory = async (req, res) => {
     });
     if (!deletedCategory) {
       res.status(400).json({
-        status: "fail",
+        success: false,
         message: `No category found with name ${req.params.slug}`,
       });
     }
     res.status(200).json({
-      status: "success",
+      success: true,
       message: "Category deleted successfully",
     });
   } catch (error) {
     res.status(400).json({
-      status: "fail",
+      success: false,
       message: "Please try again",
     });
   }
@@ -97,19 +97,19 @@ exports.updateCategory = async (req, res) => {
     );
     if (!category) {
       res.status(400).json({
-        status: "fail",
+        success: false,
         message: `No category found with name ${req.params.slug}`,
       });
     }
     res.status(200).json({
-      status: "success",
+      success: true,
       data: {
         category,
       },
     });
   } catch (error) {
     res.status(400).json({
-      status: "fail",
+      success: false,
       message: "Please try again",
     });
   }

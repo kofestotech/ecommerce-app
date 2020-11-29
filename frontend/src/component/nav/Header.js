@@ -37,6 +37,17 @@ const Header = (props) => {
     history.push("/login");
   };
 
+  function dashboardLink(user) {
+    let link = "";
+    if(user && user.role === "subscriber"){
+      link = "/user/dashboard";
+    }
+    else if(user && user.role === "admin") {
+      link = "/admin/dashboard";
+    }
+    return link;
+  }
+
   return (
     <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
       <StyledItem key="mail" icon={<HomeFilled style={{ fontSize: "18px" }} />}>
@@ -51,8 +62,7 @@ const Header = (props) => {
           className="float-right"
         >
           <ItemGroup title="Item 1">
-            <StyledItem key="setting:1">Option 1</StyledItem>
-            <StyledItem key="setting:2">Option 2</StyledItem>
+          <StyledItem key="setting:1"><Link to={dashboardLink(user)}>Dashboard</Link></StyledItem>
             <StyledItem
               icon={<LogoutOutlined style={{ fontSize: "18px" }} />}
               onClick={logout}

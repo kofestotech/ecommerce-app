@@ -12,6 +12,7 @@ import UpdatePassword from "../pages/user/UpdatePassword";
 import Wishlist from "../pages/user/Wishlist";
 import AdminRoutes from "./AdminRoutes";
 import AdminDashboard from "../pages/admin/AdminDashboard";
+import CreateCategory from "../pages/admin/category/CreateCategory";
 
 const Routes = () => {
   return (
@@ -29,6 +30,8 @@ const Routes = () => {
       />
       <UserRoutes exact path="/user/wishlist" component={Wishlist} />
       <AdminRoutes exact path="/admin/dashboard" component={AdminDashboard} />
+      <AdminRoutes exact path="/admin/category" component={CreateCategory} />
+
       <Route component={NotFound} />
     </Switch>
   );

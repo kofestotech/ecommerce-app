@@ -17,8 +17,8 @@ router
   .post(authCheck, adminCheck, createCategory);
 
 router
-  .route("/category/:slug")
-  .get(authCheck, adminCheck, getCategory)
+  .route("/categories/:slug")
+  .get(getCategory)
   .delete(authCheck, adminCheck, deleteCategory)
   .put(authCheck, adminCheck, updateCategory);
 

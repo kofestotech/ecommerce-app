@@ -10,6 +10,7 @@ import { getLoggedInUser } from "./pages/auth/actions";
 const App = () => {
   const dispatch = useDispatch();
   const [isResponseAvailable, setIsResponseAvailable] = useState(false);
+
   useEffect(() => {
     // getting logged in user from firebase and then storing in user reducer
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -32,6 +33,9 @@ const App = () => {
             window.localStorage.setItem("loggedInUser", JSON.stringify(user));
           })
           .catch((err) => console.log(err));
+      }
+      else {
+        setIsResponseAvailable(true);
       }
     });
     // cleanup to avoid memory leaks
