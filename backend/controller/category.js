@@ -3,19 +3,17 @@ const slugify = require("slugify");
 
 exports.createCategory = async (req, res) => {
   try {
-    const { name } = req.body;
-
+    const { category } = req.body;
     const newCategory = await Category.create({
-      name,
-      slug: slugify(name).toLowerCase(),
+      name: category,
+      slug: slugify(category).toLowerCase(),
     });
     res.status(201).json({
       success: true,
-      data: {
-        category: newCategory,
-      },
+      category: newCategory,
     });
   } catch (error) {
+    console.log(error);
     res.status(400).json({
       success: false,
       message: "Unable to create new category.",
@@ -28,9 +26,7 @@ exports.getAllCategories = async (req, res) => {
     const categories = await Category.find().sort({ createdAt: -1 }).exec();
     res.status(200).json({
       success: true,
-      data: {
-        categories,
-      },
+      categories,
     });
   } catch (error) {
     res.status(400).json({
@@ -51,9 +47,7 @@ exports.getCategory = async (req, res) => {
     }
     res.status(200).json({
       success: true,
-      data: {
-        category,
-      },
+      category,
     });
   } catch (error) {
     res.status(400).json({

@@ -11,15 +11,13 @@ const {
   getCategory,
 } = require("../controller/category");
 
-router
-  .route("/categories")
-  .get(getAllCategories)
-  .post(authCheck, adminCheck, createCategory);
+router.route("/categories").get(getAllCategories);
 
 router
   .route("/categories/:slug")
   .get(getCategory)
   .delete(authCheck, adminCheck, deleteCategory)
+  .post(authCheck, adminCheck, createCategory)
   .put(authCheck, adminCheck, updateCategory);
 
 module.exports = router;
